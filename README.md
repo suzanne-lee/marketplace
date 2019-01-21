@@ -47,6 +47,7 @@ The `.htaccess` file only allows access to the endpoints listed below.
 + `GET php/fetch_product?product_id=:int`
 
   Fetches a single product.
+
   `404` if product does not exist.
 
 ```json
@@ -57,6 +58,8 @@ The `.htaccess` file only allows access to the endpoints listed below.
     "inventory_count":10
 }
 ```
+
+-----
 
 + `GET php/fetch_all_products.php`
 
@@ -103,6 +106,8 @@ The `.htaccess` file only allows access to the endpoints listed below.
 ]
 ```
 
+-----
+
 + `GET php/fetch_all_products.php?in_stock`
 
   Fetches all products with `inventory_count > 0`.
@@ -142,10 +147,14 @@ The `.htaccess` file only allows access to the endpoints listed below.
 ]
 ```
 
+-----
+
 + `POST php/purchase_product.php`
 
   Purchases a product.
+
   `404` if the product does not exist.
+
   `400` if purchasing more than what is in stock.
 
   Request Body: `product_id=3&quantity=6`
@@ -162,12 +171,16 @@ The `.htaccess` file only allows access to the endpoints listed below.
 }
 ```
 
+-----
+
 ### Cart Endpoints
 
 + `POST php/create_cart.php`
 
   Creates a new cart.
+
   The `external_cart_id` must be stored by the client.
+
   Losing the `external_cart_id` means losing access to the cart.
 
 ```json
@@ -178,9 +191,12 @@ The `.htaccess` file only allows access to the endpoints listed below.
 }
 ```
 
+-----
+
 + `GET php/fetch_cart.php?external_cart_id=:string`
 
   Fetches a cart.
+
   `404` if the cart does not exist.
 
 ```json
@@ -191,9 +207,12 @@ The `.htaccess` file only allows access to the endpoints listed below.
 }
 ```
 
+-----
+
 + `POST php/add_to_cart.php`
 
   Adds a product to a cart.
+
   `404` if either the cart or product does not exist.
 
   Request Body: `product_id=:int&quantity=:int&external_cart_id=:string`
@@ -221,9 +240,12 @@ The `.htaccess` file only allows access to the endpoints listed below.
 }
 ```
 
+-----
+
 + `POST php/remove_from_cart.php`
 
   Removes a product from a cart.
+
   `404` if the cart does not exist.
 
   Request Body: `product_id=:int&external_cart_id=:string`
@@ -244,11 +266,16 @@ The `.htaccess` file only allows access to the endpoints listed below.
 }
 ```
 
+-----
+
 + `POST php/checkout_cart.php`
 
   Checks out a cart.
+
   `404` if the cart does not exist.
+
   `400` if the cart is empty.
+
   `400` if purchasing more than what is in stock.
 
   Request Body: `external_cart_id=:string`
