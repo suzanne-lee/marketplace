@@ -1,0 +1,8 @@
+Options -Indexes
+Order Allow,Deny
+<FilesMatch "^(fetch_product|fetch_all_products|purchase_product)\.php$">
+Allow from all
+</FilesMatch>
+<FilesMatch "^(create_cart|fetch_cart|add_to_cart|remove_from_cart|checkout_cart)\.php$">
+Allow from all
+</FilesMatch>
