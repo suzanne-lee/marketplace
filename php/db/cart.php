@@ -5,10 +5,8 @@ require_once "product.php";
 
 function create_cart () {
     $db = getDb();
-    //generate random alphanumeric string
     $random_id = uniqid(mt_rand(), true);
-    // save in db as external_cart_id
-    // create new cart
+
     $statement = $db->prepare("
         INSERT INTO
             cart (external_cart_id)
@@ -25,7 +23,6 @@ function create_cart () {
 
 function fetch_cart_id ($external_cart_id) {
     $db = getDb();
-    // check if cart exists in the cart table
     $statement = $db->prepare("
         SELECT
             cart_id
@@ -45,6 +42,7 @@ function fetch_cart_id ($external_cart_id) {
 function fetch_cart ($external_cart_id) {
     $db = getDb();
     $cart_id = fetch_cart_id($external_cart_id);
+
     $statement = $db->prepare("
         SELECT
             c.quantity,
@@ -79,7 +77,7 @@ function add_to_cart ($external_cart_id, $product_id, $quantity) {
     $db = getDb();
     $cart_id = fetch_cart_id($external_cart_id);
     assert_product_exists($product_id);
-    // insert into table where id = cart id, the quantity and the product id
+
     $statement = $db->prepare("
         INSERT INTO
             cart_content (cart_id, product_id, quantity)
@@ -105,6 +103,7 @@ function add_to_cart ($external_cart_id, $product_id, $quantity) {
 function remove_from_cart ($external_cart_id, $product_id) {
     $db = getDb();
     $cart_id = fetch_cart_id($external_cart_id);
+
     $statement = $db->prepare("
         DELETE FROM
             cart_content

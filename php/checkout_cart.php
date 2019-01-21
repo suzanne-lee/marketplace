@@ -2,8 +2,6 @@
 require_once "db/index.php";
 require_once "respond.php";
 
-//given an external cart id, purchase the items that are in the cart_content table
-
 if (!isset($_POST["external_cart_id"])) {
     error(400, "external_cart_id expected");
 }

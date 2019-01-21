@@ -2,8 +2,6 @@
 require_once "db/index.php";
 require_once "respond.php";
 
-// given a product_id, and quantity, cart_id, add the product to cart
-
 if (!isset($_POST["product_id"])) {
     error(400, "product_id expected");
 }

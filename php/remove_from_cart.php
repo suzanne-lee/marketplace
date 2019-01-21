@@ -2,8 +2,6 @@
 require_once "db/index.php";
 require_once "respond.php";
 
-// given a product_id, external_cart_id, remove the product from cart
-
 if (!isset($_POST["product_id"])) {
     error(400, "product_id expected");
 }
