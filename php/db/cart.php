@@ -3,6 +3,9 @@ require_once "db.php";
 require_once "exception.php";
 require_once "product.php";
 
+/* Generates a random alphanumeric string,
+ * which will act as an identifier for the cart
+ */
 function create_cart () {
     $db = getDb();
     $random_id = uniqid(mt_rand(), true);
@@ -21,6 +24,9 @@ function create_cart () {
     return $random_id;
 }
 
+/* Fetch the cart id of an existing cart
+ * Throws error if the cart doesn't exist
+ */
 function fetch_cart_id ($external_cart_id) {
     $db = getDb();
     $statement = $db->prepare("
@@ -39,6 +45,9 @@ function fetch_cart_id ($external_cart_id) {
     return $cart->cart_id;
 }
 
+/* Fetch a cart by its external id if it exists
+ * Calculates the total price of all the products in the cart
+ */
 function fetch_cart ($external_cart_id) {
     $db = getDb();
     $cart_id = fetch_cart_id($external_cart_id);
@@ -73,6 +82,8 @@ function fetch_cart ($external_cart_id) {
     ];
 }
 
+/* Adds specified number of an item to a given cart
+ */
 function add_to_cart ($external_cart_id, $product_id, $quantity) {
     $db = getDb();
     $cart_id = fetch_cart_id($external_cart_id);
@@ -100,6 +111,8 @@ function add_to_cart ($external_cart_id, $product_id, $quantity) {
     }
 }
 
+/* Removes all quantities of an item from a cart
+ */
 function remove_from_cart ($external_cart_id, $product_id) {
     $db = getDb();
     $cart_id = fetch_cart_id($external_cart_id);
@@ -121,9 +134,13 @@ function remove_from_cart ($external_cart_id, $product_id) {
     }
 }
 
+/* "Complete" a cart if all items are available to be purchased
+ */
 function checkout_cart ($external_cart_id) {
     $db = getDb();
 
+    //We use a transaction so that all purchases either succeed
+    //or all fail
     $transactionStarted = $db->beginTransaction();
     if (!$transactionStarted) {
         throw new Exception("An unexpected error occurred; failed to enter transaction");

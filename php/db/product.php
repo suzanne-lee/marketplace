@@ -2,6 +2,9 @@
 require_once "db.php";
 require_once "exception.php";
 
+/* Fetch 1 product with a given ID
+ * Throws error if item could not be found
+ */
 function fetch_product ($product_id) {
     $db = getDb();
     $statement = $db->prepare("
@@ -21,6 +24,9 @@ function fetch_product ($product_id) {
     return $result;
 }
 
+/* Fetch all products if $in_stock = false
+ * Fetch all products that have an inventory of greater than 0 if $in_stock = true
+ */
 function fetch_all_products ($in_stock) {
     $db = getDb();
     if ($in_stock) {
@@ -45,6 +51,8 @@ function fetch_all_products ($in_stock) {
     return $result;
 }
 
+/* Check if product exists
+ */
 function assert_product_exists ($product_id) {
     $db = getDb();
     $statement = $db->prepare("
@@ -65,6 +73,8 @@ function assert_product_exists ($product_id) {
     }
 }
 
+/* Purchase 1 type of item without needing to add to cart
+ */
 function purchase_product ($product_id, $quantity) {
     if ($quantity <= 0) {
         throw new InvalidOperationException("Cannot purchase {$quantity} of {$product->title} (Min: 1)");
@@ -76,6 +86,9 @@ function purchase_product ($product_id, $quantity) {
         throw new InvalidOperationException("Cannot purchase {$quantity} of {$product->title} (Max: {$product->inventory_count})");
     }
 
+    //We update where inventory_count >= quantity
+    //because the inventory_count could have changed before executing this
+    //We could have also used a transaction
     $statement = $db->prepare("
         UPDATE
             product
